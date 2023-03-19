@@ -1,3 +1,4 @@
+import 'package:clean_flutter_app/data/http/http_error.dart';
 import 'package:clean_flutter_app/infra/http/http.dart';
 import 'package:faker/faker.dart';
 import 'package:http/http.dart';
@@ -68,6 +69,42 @@ void main() {
       mockResponse(204);
       final response = await sut.request(url: url, method: 'post');
       expect(response, null);
+    });
+
+    test('Should return badRequest error when post returns 400', () async {
+      mockResponse(400);
+      final future = sut.request(url: url, method: 'post');
+      expect(future, throwsA(HttpError.badRequest));
+    });
+
+    test('Should return badRequest error when post returns 400', () async {
+      mockResponse(400, body: '');
+      final future = sut.request(url: url, method: 'post');
+      expect(future, throwsA(HttpError.badRequest));
+    });
+
+    test('Should return unauthorized error when post returns 401', () async {
+      mockResponse(401);
+      final future = sut.request(url: url, method: 'post');
+      expect(future, throwsA(HttpError.unauthorized));
+    });
+
+    test('Should return forbidden error when post returns 403', () async {
+      mockResponse(403);
+      final future = sut.request(url: url, method: 'post');
+      expect(future, throwsA(HttpError.forbidden));
+    });
+
+    test('Should return notFound error when post returns 404', () async {
+      mockResponse(404);
+      final future = sut.request(url: url, method: 'post');
+      expect(future, throwsA(HttpError.notFound));
+    });
+
+    test('Should return serverError error when post returns 400', () async {
+      mockResponse(500);
+      final future = sut.request(url: url, method: 'post');
+      expect(future, throwsA(HttpError.serverError));
     });
   });
 }
