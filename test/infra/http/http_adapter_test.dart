@@ -2,20 +2,24 @@ import 'package:clean_flutter_app/data/http/http.dart';
 import 'package:clean_flutter_app/infra/http/http.dart';
 import 'package:faker/faker.dart';
 import 'package:http/http.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 class ClientSpy extends Mock implements Client {}
 
 void main() {
-  HttpAdapter sut;
-  ClientSpy client;
-  String url;
+  late HttpAdapter sut;
+  late ClientSpy client;
+  late String url;
 
   setUp(() {
     client = ClientSpy();
     sut = HttpAdapter(client);
+  });
+
+  setUpAll(() {
     url = faker.internet.httpUrl();
+    registerFallbackValue(Uri.parse(url));
   });
 
   group('shared', () {
@@ -27,8 +31,8 @@ void main() {
   });
 
   group('post', () {
-    PostExpectation mockRequest() => when(
-        client.post(any, body: anyNamed('body'), headers: anyNamed('headers')));
+    When mockRequest() => when(() => client.post(any(),
+        body: any(named: 'body'), headers: any(named: 'headers')));
 
     void mockResponse(int statusCode,
         {String body = '{"any_key":"any_value"}'}) {
@@ -47,7 +51,7 @@ void main() {
       await sut
           .request(url: url, method: 'post', body: {'any_key': 'any_value'});
 
-      verify(client.post(Uri.dataFromString(url),
+      verify(() => client.post(Uri.parse(url),
           headers: {
             'content-type': 'application/json',
             'accept': 'application/json'
@@ -58,7 +62,7 @@ void main() {
     test('Should call post without body', () async {
       await sut.request(url: url, method: 'post');
 
-      verify(client.post(any, headers: anyNamed('headers')));
+      verify(() => client.post(any(), headers: any(named: 'headers')));
     });
 
     test('Should return data if post returns 200', () async {
