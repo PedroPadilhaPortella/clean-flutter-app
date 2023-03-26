@@ -12,8 +12,6 @@ O objetivo do treinamento é mostrar como criar um aplicativo com Flutter usando
 
 > ## Casos de Uso
 
-1. [Login](./requirements/login/remote_authentication_use_case.md)
-
 > ## Princípios
 
 * Single Responsibility Principle (SRP)
