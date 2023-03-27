@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:clean_flutter_app/ui/pages/pages.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class LoginPreseterSpy extends Mock implements LoginPresenter {}
+class LoginPresenterSpy extends Mock implements LoginPresenter {}
 
 void main() {
   late LoginPresenter presenter;
@@ -46,7 +45,7 @@ void main() {
   }
 
   Future<void> loadPage(WidgetTester tester) async {
-    presenter = LoginPreseterSpy();
+    presenter = LoginPresenterSpy();
     initStreams();
     mockStreams();
     final loginPage = MaterialApp(home: LoginPage(presenter: presenter));
